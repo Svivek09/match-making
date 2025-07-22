@@ -7,12 +7,18 @@ const Gig = require('./models/Gig');
 const Talent = require('./models/Talent');
 
 const app = express();
-const allowedOrigins = [
-  'http://localhost:3000',
-  'https://match-making-frontend-url.com', // replace with your deployed frontend URL
-];
+const allowedOrigins = process.env.FRONTEND_URL
+  ? process.env.FRONTEND_URL.split(',').map(url => url.trim())
+  : [];
 app.use(cors({
-  origin: allowedOrigins,
+  origin: function(origin, callback) {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    } else {
+      return callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
 }));
 app.use(express.json());
