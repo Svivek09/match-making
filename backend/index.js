@@ -7,7 +7,14 @@ const Gig = require('./models/Gig');
 const Talent = require('./models/Talent');
 
 const app = express();
-app.use(cors());
+const allowedOrigins = [
+  'http://localhost:3000',
+  'https://match-making-frontend-url.com', // replace with your deployed frontend URL
+];
+app.use(cors({
+  origin: allowedOrigins,
+  credentials: true,
+}));
 app.use(express.json());
 
 // MongoDB connection
